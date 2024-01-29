@@ -1,0 +1,23 @@
+{
+  "name": "three-lavalamp-background",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@tweakpane/core": "^2.0.3",
+    "@types/three": "^0.160.0",
+    "vite": "^5.0.8",
+    "vite-plugin-glsl": "^1.2.1"
+  },
+  "dependencies": {
+    "@leonardorick/three": "^1.0.9",
+    "nice-color-palettes": "^3.0.0",
+    "three": "^0.160.1",
+    "tweakpane": "^4.0.3"
+  }
+}
