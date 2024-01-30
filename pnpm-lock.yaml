@@ -6,16 +6,22 @@ settings:
 
 dependencies:
   '@leonardorick/three':
-    specifier: ^1.0.9
-    version: 1.0.9(three@0.160.1)
+    specifier: ^1.0.30
+    version: 1.0.30(three@0.160.1)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
   three:
     specifier: ^0.160.1
     version: 0.160.1
+  tweakpane:
+    specifier: ^4.0.3
+    version: 4.0.3
 
 devDependencies:
+  '@tweakpane/core':
+    specifier: ^2.0.3
+    version: 2.0.3
   '@types/three':
     specifier: ^0.160.0
     version: 0.160.0
@@ -235,8 +241,8 @@ packages:
     dev: true
     optional: true
 
-  /@leonardorick/three@1.0.9(three@0.160.1):
-    resolution: {integrity: sha512-opq6ujEUsLxdQUWkxHOz8adeDQxBPpZgaGPmpMmKIOuut0zfBuyCgKaWripO1VO6FIXENCg6Szc3IZyHOb9zpA==}
+  /@leonardorick/three@1.0.30(three@0.160.1):
+    resolution: {integrity: sha512-CHhXLltvRr6KAoKPkrcFPQzumCL5CpFh/KJyw/ODKaaISUoJvCwC4BdllMLDWpKGb5Znrk76qCgcegb+PWHynQ==}
     peerDependencies:
       three: '>=0.160.1'
     dependencies:
@@ -372,6 +378,10 @@ packages:
     dependencies:
       defer-to-connect: 1.1.3
     dev: false
+
+  /@tweakpane/core@2.0.3:
+    resolution: {integrity: sha512-qHci4XA1Wngpwy8IzsLh5JEdscz8aDti/9YhyOaq01si+cgNDaZfwzTtXdn1+xTxSnCM+pW4Zb2/4eqn+K1ATw==}
+    dev: true
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -688,6 +698,10 @@ packages:
   /to-readable-stream@1.0.0:
     resolution: {integrity: sha512-Iq25XBt6zD5npPhlLVXGFN3/gyR2/qODcKNNyTMd4vbm39HUaOiAM4PMq0eMVC/Tkxz+Zjdsc55g9yyz+Yq00Q==}
     engines: {node: '>=6'}
+    dev: false
+
+  /tweakpane@4.0.3:
+    resolution: {integrity: sha512-BlcWOAe8oe4c+k9pmLBARGdWB6MVZMszayekkixQXTgkxTaYoTUpHpwVEp+3HkoamZkomodpbBf0CkguIHTgLg==}
     dev: false
 
   /undici-types@5.26.5:

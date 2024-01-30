@@ -10,6 +10,15 @@ uniform float uInclineOffset;
 
 uniform float uNoise;
 
+uniform float uColorSeed;
+uniform float uColorFlow;
+uniform float uColorSpeed;
+uniform float uColorFreq;
+uniform float uColorFreqY;
+
+uniform float uNoiseFloor;
+uniform float uNoiseCeil;
+
 varying vec2 vUv;
 varying vec3 vColor;
 
@@ -38,31 +47,31 @@ void main() {
     * color
     */
     vColor = uPallete[4];
-    for (int i = 0; i < 4; i++) {
+    for (float i = 0.; i < 4.; i++) {
 
         // snoise function seems to not be pure so getting a new instance for each
         // interaction will generate a better random behavior, what we want. But this
-        // random value is only ranmdomizing the color, not the position where it is,
-        // and thats what noisePosition adds
-        float noisePosition = 5. + float(i) * 0.3;
-        float noiseSpeed = 10. + float(i) * 0.3;
-        float noiseSeed = 1. + float(i) * 10.;
+        // random value is only ranmdomizing the color, not changing the position
+        // where the color is, and thats what colorFlow tries to do
+        float colorSeed = 1. + i * uColorSeed;
+        float colorFlow = 5. + i * -uColorFlow;
+        float colorSpeed = 10. + i * uColorSpeed;
 
         // play with this value to show more randomness on the colors (more messy)
-        vec2 noiseFreq = vec2(0.3, 0.4);
+        vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
 
-        float noiseFloor = 0.1;
-        float noiseCeil = 0.6 + float(i) * 0.07;
+        float noiseFloor = uNoiseFloor;
+        float noiseCeil = uNoiseCeil + i * 0.07;
 
         float colorNoise = smoothstep(noiseFloor, noiseCeil, snoise(
             vec3(
-                noiseXY.x * noiseFreq.x + uTime * noisePosition,
-                noiseXY.y * noiseFreq.y,
-                uTime * noiseSpeed + noiseSeed
+                noiseXY.x * colorFreq.x + uTime * colorFlow,
+                noiseXY.y * colorFreq.y,
+                uTime * colorSpeed + colorSeed
             )
         ));
 
-        vColor = mix(vColor, uPallete[i], colorNoise);
+        vColor = mix(vColor, uPallete[int(i)], colorNoise);
     }
 
 

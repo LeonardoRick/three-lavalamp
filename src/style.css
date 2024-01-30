@@ -1,7 +1,51 @@
-.tp-dfwv {
-  width: 100px;
+* {
+  /* same as tweakpane */
+  color: var(--darkreader-text--tp-container-foreground-color, #c0bab2);
+  font-family: var(--tp-base-font-family, Roboto Mono, Source Code Pro, Menlo, Courier, monospace);
 }
 
-.tp-rotv {
-  font-size: 12px;
+.camera-coordinates {
+  position: absolute;
+  height: 300px;
+  width: 350px;
+  padding: 6px;
+
+  /* same as tweakpane */
+  color: var(--darkreader-text--tp-container-foreground-color, #c0bab2);
+  background-color: var(--darkreader-bg--tp-base-background-color, #202324);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.camera-coordinates table tr {
+  margin-bottom: 12px;
+  display: block;
+  text-align: left;
+}
+
+.camera-coordinates h2 {
+  color: var(--darkreader-text--tp-container-foreground-color, #c0bab2);
+  background-color: var(--darkreader-bg--tp-container-background-color, rgba(60, 65, 67, 0.1));
+  padding: 4px;
+  margin: 0 0 6px;
+  border-top-left-radius: 6px;
+  text-align: center;
+  border-top-right-radius: 6px;
+  font-size: 16px;
+}
+
+.camera-coordinates .separator {
+  height: 6px;
+  width: 310px;
+  display: block;
+  margin: 8px 0;
+  background-color: var(--darkreader-bg--tp-button-background-color, #43494c);
+}
+
+.camera-coordinates button {
+  color: var(--darkreader-text--tp-container-foreground-color, #c0bab2);
+  width: 100%;
+  cursor: pointer;
 }
