@@ -1,0 +1,7 @@
+node_modules/
+tests/
+coverage/
+src/
+
+.prettierrc
+jest.config.js
