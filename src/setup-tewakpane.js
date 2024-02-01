@@ -206,7 +206,7 @@ function setupToggleCameraCoordinatesVisibility(pane, camera, controls) {
   resetCameracoordinates.on('click', () => {
     controls?.reset();
     setupNiceInitialCameraPosition(camera);
-    updateCameraCoordinatesOnLocalStorageAndHTML(camera);
+    updateCameraAndControlsOnLocalStorageAndHTML(camera, controls);
   });
 
   const table = document.querySelector('.camera-coordinates');
@@ -230,6 +230,7 @@ function setupToggleCameraCoordinatesVisibility(pane, camera, controls) {
   const copyCameraCoordBtn = document.querySelector('.camera-coordinates button');
   copyCameraCoordBtn.addEventListener('click', () => {
     const coordinates = loadCameraCoordinates();
+    const controlsPosition = loadControlsPosition();
     navigator.clipboard.writeText(`
             camera.position.x = ${coordinates.position.x};
             camera.position.y = ${coordinates.position.y};
@@ -237,6 +238,10 @@ function setupToggleCameraCoordinatesVisibility(pane, camera, controls) {
             camera.rotation.x = ${coordinates.rotation.x};
             camera.rotation.y = ${coordinates.rotation.y};
             camera.rotation.z = ${coordinates.rotation.z};
+
+            controls.x = ${controlsPosition.x};
+            controls.y = ${controlsPosition.y};
+            controls.z = ${controlsPosition.z};
         `);
   });
 }

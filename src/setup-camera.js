@@ -4,30 +4,37 @@ import {
   saveCameraCoordinates,
   loadCameraCoordinates,
   getCameraCoordinates,
+  loadControlsPosition,
+  saveControlsPosition,
+  getControlsPosition,
 } from '@leonardorick/three';
 /**
  *
  * @param {Camera} camera
- * @param {OrbitControls} controls
+ * @param {OrbitControls | undefined} controls
  */
 export function setupCamera(camera, controls) {
-  /**
-   * camera positioning
-   */
-
-  createCameraConteiner();
-  setupNiceInitialCameraPosition(camera);
+  createHTMLCameraConteiner();
+  setupNiceInitialCameraPosition(camera, controls);
   loadCameraCoordinates(camera);
 
+  if (controls) {
+    loadControlsPosition(controls);
+  }
+
   controls.addEventListener('change', () => {
-    updateCameraCoordinatesOnLocalStorageAndHTML(camera);
+    updateCameraAndControlsOnLocalStorageAndHTML(camera, controls);
   });
 }
 
 /**
  * @param {Camera} camera
+ * @param {OrbitControls | undefined} controls
  */
-export function updateCameraCoordinatesOnLocalStorageAndHTML(camera) {
+export function updateCameraAndControlsOnLocalStorageAndHTML(camera, controls) {
+  /**
+   * camera
+   */
   saveCameraCoordinates(camera);
 
   const px = document.getElementById('position-x');
@@ -47,22 +54,47 @@ export function updateCameraCoordinatesOnLocalStorageAndHTML(camera) {
   rx.innerHTML = coordinates.rotation.x;
   ry.innerHTML = coordinates.rotation.y;
   rz.innerHTML = coordinates.rotation.z;
+
+  /**
+   * controls
+   */
+  if (controls) {
+    saveControlsPosition(controls);
+
+    const controlsPosition = getControlsPosition();
+    const cpx = document.getElementById('controls-position-x');
+    const cpy = document.getElementById('controls-position-y');
+    const cpz = document.getElementById('controls-position-z');
+    cpx.innerHTML = controlsPosition.x;
+    cpy.innerHTML = controlsPosition.y;
+    cpz.innerHTML = controlsPosition.z;
+  }
 }
 
 /**
  * setup nice initial camera position
  * @param {Camera} camera
+ * @param {OrbitControls | undefined} controls
  */
-export function setupNiceInitialCameraPosition(camera) {
-  camera.position.x = -0.09333556438167928;
-  camera.position.y = -5.573420356836092;
-  camera.position.z = 4.785472583279639;
-  camera.rotation.x = 0.935821950568318;
-  camera.rotation.y = -0.015885914453744706;
-  camera.rotation.z = 0.021557572278148272;
+export function setupNiceInitialCameraPosition(camera, controls) {
+  const { position, rotation } = getCameraCoordinates();
+  if (!position && !rotation) {
+    camera.position.x = -0.19271820427709524;
+    camera.position.y = -2.3521932853853045;
+    camera.position.z = 3.837729105027273;
+    camera.rotation.x = 0.4270359932134578;
+    camera.rotation.y = -0.06311428002082126;
+    camera.rotation.z = 0.028692484506921502;
+  }
+
+  if (controls) {
+    controls.x = 0.08925135808773098;
+    controls.y = -0.5042822081797997;
+    controls.z = -0.2232707713823408;
+  }
 }
 
-function createCameraConteiner() {
+function createHTMLCameraConteiner() {
   addStyles();
 
   const coords = ['x', 'y', 'z'];
@@ -95,6 +127,27 @@ function createCameraConteiner() {
       table.appendChild(separator);
     }
   }
+
+  const separator = document.createElement('tr');
+  separator.classList.add('separator');
+  table.appendChild(separator);
+  /**
+   * controls
+   */
+  for (const coord of coords) {
+    const tr = document.createElement('tr');
+    const tdLabel = document.createElement('td');
+    tdLabel.innerHTML = `controls position ${coord}: `;
+    const tdValue = document.createElement('td');
+    tdValue.id = `controls-position-${coord}`;
+    tdValue.innerHTML = '{{value}}';
+    tr.appendChild(tdLabel);
+    tr.appendChild(tdValue);
+    table.appendChild(tr);
+  }
+  /**
+   * putting all together
+   */
   cameraCoordinates.appendChild(table);
 
   const button = document.createElement('button');
@@ -109,8 +162,8 @@ function addStyles() {
     .camera-coordinates {
       position: absolute;
       top: 8px;
-      height: 325px;
-      width: 350px;
+      height: 425px;
+      width: 425px;
       padding: 6px;
 
       font-family: var(

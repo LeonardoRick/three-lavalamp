@@ -3,5 +3,11 @@ tests/
 coverage/
 src/
 
-.prettierrc
 jest.config.js
+vite.config.js
+
+todo
+.prettierrc
+.nvmrc
+
+index.html
