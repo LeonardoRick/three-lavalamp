@@ -31,6 +31,7 @@ export function getLavalamp({ isDev = false } = {}) {
       uniforms: {
         uTime: { value: 0 },
         uPallete: { value: uPallete },
+        uIntensity: { value: [1, 1, 1, 1, 1] },
 
         uInclineXY: { value: -0.8 },
         uInclineX: { value: 0.1 },
