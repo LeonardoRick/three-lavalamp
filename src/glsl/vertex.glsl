@@ -3,6 +3,7 @@ uniform __import__snoise; // this line will be replaced by replaceShaderImport f
 
 uniform float uTime;
 uniform vec3 uPallete[5];
+uniform float uIntensity[5];
 
 uniform float uInclineXY;
 uniform float uInclineX;
