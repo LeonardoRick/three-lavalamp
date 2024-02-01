@@ -10,17 +10,21 @@ uniform float uInclineX;
 uniform float uInclineOffset;
 uniform float uBendOnX;
 
-uniform float uNoise;
+uniform float uNoiseHeight;
+uniform float uNoiseX;
+uniform float uNoiseY;
+uniform float uNoiseSpeed;
+uniform float uNoiseFloor;
 
 uniform int uMainColor;
 uniform float uColorSeed;
-uniform float uColorFlow;
+uniform float uColorDirectionX;
 uniform float uColorSpeed;
 uniform float uColorFreq;
 uniform float uColorFreqY;
 
-uniform float uNoiseFloor;
-uniform float uNoiseCeil;
+uniform float uColorNoiseFloor;
+uniform float uColorNoiseCeil;
 
 varying vec2 vUv;
 varying vec3 vColor;
@@ -33,7 +37,7 @@ void main() {
     /**
     * position
     */
-    vec2 noiseXY = uv * vec2(3., 4.);
+    vec2 noiseXY = uv * vec2(uNoiseX, uNoiseY);
     float inclineY = uv.y * uInclineXY;
     float inclineX = uv.x * uInclineX;
 
@@ -43,10 +47,12 @@ void main() {
 
     // doesn't make sense to tweak this offsets (3. and 10.), just make sure to keep them
     // different from each other to pursue randomness
-    float noise = snoise(vec3(noiseXY.x + uTime * 3., noiseXY.y, uTime * 10.));
+    float noise = snoise(vec3(noiseXY.x + uTime * 3., noiseXY.y, uTime * uNoiseSpeed));
+
     // only wave to the top, since it's a plane
-    noise = max( 0., noise);
-    vec3 pos = vec3(position.x, position.y, position.z + noise * uNoise + inclineY + inclineX + offset + bendOnX);
+    noise = max( uNoiseFloor, noise);
+
+    vec3 pos = vec3(position.x, position.y, position.z + noise * uNoiseHeight + inclineY + inclineX + offset + bendOnX);
 
     /**
     * color
@@ -61,14 +67,14 @@ void main() {
             // where the color is, and thats what colorFlow tries to do
             float fi = float(i);
             float colorSeed = 1. + fi * uColorSeed;
-            float colorFlow = 5. + fi * -uColorFlow;
+            float colorFlow = 5. + fi * -uColorDirectionX;
             float colorSpeed = 10. + fi * uColorSpeed;
 
             // play with this value to show more randomness on the colors (more messy)
             vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
 
-            float noiseFloor = uNoiseFloor;
-            float noiseCeil = uNoiseCeil + fi * 0.07;
+            float noiseFloor = uColorNoiseFloor;
+            float noiseCeil = uColorNoiseCeil + fi * 0.07;
 
             float colorNoise = smoothstep(noiseFloor, noiseCeil, snoise(
                 vec3(
@@ -80,9 +86,7 @@ void main() {
 
             vColor = mix(vColor, uPallete[i] * uIntensity[i], colorNoise);
         }
-
     }
-
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

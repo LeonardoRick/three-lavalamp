@@ -68,20 +68,45 @@ function setupUniformTweaks(mesh, pane) {
     label: 'bend on X',
   });
 
-  pane.addBinding(uniforms.uNoise, 'value', {
+  /**
+   * floor messyness (noise)
+   */
+
+  pane.addBinding(uniforms.uNoiseHeight, 'value', {
     min: -5,
-    max: 5,
-    step: 0.01,
-    label: 'noise',
+    max: 10,
+    step: 0.05,
+    label: 'noise height',
   });
 
-  pane.addBinding(uniforms.uMainColor, 'value', {
-    label: 'main color',
-    options: [0, 1, 2, 3, 4].reduce((acum, curr) => {
-      acum[String(curr + 1)] = curr;
-      return acum;
-    }, {}),
+  pane.addBinding(uniforms.uNoiseX, 'value', {
+    min: 0,
+    max: 20,
+    step: 0.5,
+    label: 'noise X',
   });
+
+  pane.addBinding(uniforms.uNoiseY, 'value', {
+    min: 0,
+    max: 20,
+    step: 0.5,
+    label: 'noise Y',
+  });
+
+  pane.addBinding(uniforms.uNoiseSpeed, 'value', {
+    min: 0,
+    max: 500,
+    step: 1,
+    label: 'noise speed',
+  });
+
+  pane.addBinding(uniforms.uNoiseFloor, 'value', {
+    min: -1,
+    max: 0,
+    step: 0.01,
+    label: 'noise floor',
+  });
+
   pane.addBinding(uniforms.uColorSeed, 'value', {
     min: 0,
     max: 60,
@@ -89,11 +114,11 @@ function setupUniformTweaks(mesh, pane) {
     label: 'color seed',
   });
 
-  pane.addBinding(uniforms.uColorFlow, 'value', {
-    min: -30,
-    max: 30,
-    step: 0.5,
-    label: 'color flow',
+  pane.addBinding(uniforms.uColorDirectionX, 'value', {
+    min: -100,
+    max: 100,
+    step: 0.1,
+    label: 'color direction X',
   });
 
   pane.addBinding(uniforms.uColorSpeed, 'value', {
@@ -117,14 +142,14 @@ function setupUniformTweaks(mesh, pane) {
     label: 'color messyness Y',
   });
 
-  pane.addBinding(uniforms.uNoiseFloor, 'value', {
-    min: 0.1,
+  pane.addBinding(uniforms.uColorNoiseFloor, 'value', {
+    min: 0.01,
     max: 0.5,
     step: 0.001,
     label: 'color noise floor',
   });
 
-  pane.addBinding(uniforms.uNoiseCeil, 'value', {
+  pane.addBinding(uniforms.uColorNoiseCeil, 'value', {
     min: 0.5,
     max: 1,
     step: 0.001,
@@ -153,11 +178,21 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     selected: palleteIndex,
     options: colors.length - 1,
   };
+
   // create pallete selector that will update all colors inside
   // selectedPalleteObj[i].color everytime we change the selection
   const palleteSelector = pane.addBinding(colorsObj, 'selected', {
+    label: 'selected pallete',
     options: colors.reduce((acum, _curr, currIndex) => {
       acum[`Pallete ${currIndex}`] = currIndex;
+      return acum;
+    }, {}),
+  });
+
+  pane.addBinding(mesh.material.uniforms.uMainColor, 'value', {
+    label: 'main color',
+    options: [0, 1, 2, 3, 4].reduce((acum, curr) => {
+      acum[String(curr + 1)] = curr;
       return acum;
     }, {}),
   });

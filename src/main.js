@@ -23,35 +23,39 @@ export function getLavalamp({ isDev = false } = {}) {
   /**
    * mesh
    */
-  const mesh = new Mesh(
-    new PlaneGeometry(16, 10, 150, 150),
-    new ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uTime: { value: 0 },
-        uPallete: { value: uPallete },
-        uIntensity: { value: [1, 1, 1, 1, 1] },
+  const material = new ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      uTime: { value: 0 },
+      uPallete: { value: uPallete },
+      uIntensity: { value: [1, 1, 1, 1, 1] },
 
-        uInclineXY: { value: -0.8 },
-        uInclineX: { value: 0.1 },
-        uInclineOffset: { value: 0.25 },
-        uBendOnX: { value: 18.9 },
+      uInclineXY: { value: -0.8 },
+      uInclineX: { value: 0.1 },
+      uInclineOffset: { value: 0.25 },
+      // uBendOnX: { value: 18.9 },
+      uBendOnX: { value: 1 },
 
-        uNoise: { value: 2.77 },
-        uColorSeed: { value: 9 },
-        uColorFlow: { value: 0.3 },
-        uColorSpeed: { value: 0.3 },
-        uColorFreq: { value: 0.3 },
-        uColorFreqY: { value: 0.13 },
+      uNoiseHeight: { value: 2.77 },
+      uNoiseX: { value: 3 },
+      uNoiseY: { value: 4 },
+      uNoiseSpeed: { value: 10 },
+      uNoiseFloor: { value: 0 }, // cut the waves at the base
 
-        uNoiseFloor: { value: 0.1 },
-        uNoiseCeil: { value: 0.6 },
-      },
-      side: DoubleSide,
-      // wireframe: true,
-    })
-  );
+      uMainColor: { value: 4 }, // one of the 0-4 colors of the pallete
+      uColorSeed: { value: 9 },
+      uColorDirectionX: { value: 0.3 },
+      uColorSpeed: { value: 0.3 },
+      uColorFreq: { value: 0.3 },
+      uColorFreqY: { value: 0.13 },
+      uColorNoiseFloor: { value: 0 },
+      uColorNoiseCeil: { value: 0.6 },
+    },
+    side: DoubleSide,
+    // wireframe: true,
+  });
+  const mesh = new Mesh(new PlaneGeometry(18, 10, 150, 150), material);
 
   /**
    * main scene
