@@ -88,9 +88,9 @@ export function setupNiceInitialCameraPosition(camera, controls) {
   }
 
   if (controls) {
-    controls.x = 0.08925135808773098;
-    controls.y = -0.5042822081797997;
-    controls.z = -0.2232707713823408;
+    controls.target.x = 0.08925135808773098;
+    controls.target.y = -0.5042822081797997;
+    controls.target.z = -0.2232707713823408;
   }
 }
 

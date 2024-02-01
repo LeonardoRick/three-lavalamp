@@ -239,9 +239,9 @@ function setupToggleCameraCoordinatesVisibility(pane, camera, controls) {
             camera.rotation.y = ${coordinates.rotation.y};
             camera.rotation.z = ${coordinates.rotation.z};
 
-            controls.x = ${controlsPosition.x};
-            controls.y = ${controlsPosition.y};
-            controls.z = ${controlsPosition.z};
+            controls.target.x = ${controlsPosition.x};
+            controls.target.y = ${controlsPosition.y};
+            controls.target.z = ${controlsPosition.z};
         `);
   });
 }
