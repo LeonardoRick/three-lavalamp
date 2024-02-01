@@ -11,6 +11,7 @@ uniform float uBendOnX;
 
 uniform float uNoise;
 
+uniform int uMainColor;
 uniform float uColorSeed;
 uniform float uColorFlow;
 uniform float uColorSpeed;
@@ -29,7 +30,7 @@ void main() {
     vUv = uv;
 
     /**
-    * noise
+    * position
     */
     vec2 noiseXY = uv * vec2(3., 4.);
     float inclineY = uv.y * uInclineXY;
@@ -49,32 +50,36 @@ void main() {
     /**
     * color
     */
-    vColor = uPallete[4];
-    for (float i = 0.; i < 4.; i++) {
+    vColor = uPallete[uMainColor] * uIntensity[uMainColor];
 
-        // snoise function seems to not be pure so getting a new instance for each
-        // interaction will generate a better random behavior, what we want. But this
-        // random value is only ranmdomizing the color, not changing the position
-        // where the color is, and thats what colorFlow tries to do
-        float colorSeed = 1. + i * uColorSeed;
-        float colorFlow = 5. + i * -uColorFlow;
-        float colorSpeed = 10. + i * uColorSpeed;
+    for (int i = 0; i <= 5; i++) {
+        if (i != uMainColor) {
+            // snoise function seems to not be pure so getting a new instance for each
+            // interaction will generate a better random behavior, what we want. But this
+            // random value is only ranmdomizing the color, not changing the position
+            // where the color is, and thats what colorFlow tries to do
+            float fi = float(i);
+            float colorSeed = 1. + fi * uColorSeed;
+            float colorFlow = 5. + fi * -uColorFlow;
+            float colorSpeed = 10. + fi * uColorSpeed;
 
-        // play with this value to show more randomness on the colors (more messy)
-        vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
+            // play with this value to show more randomness on the colors (more messy)
+            vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
 
-        float noiseFloor = uNoiseFloor;
-        float noiseCeil = uNoiseCeil + i * 0.07;
+            float noiseFloor = uNoiseFloor;
+            float noiseCeil = uNoiseCeil + fi * 0.07;
 
-        float colorNoise = smoothstep(noiseFloor, noiseCeil, snoise(
-            vec3(
-                noiseXY.x * colorFreq.x + uTime * colorFlow,
-                noiseXY.y * colorFreq.y,
-                uTime * colorSpeed + colorSeed
-            )
-        ));
+            float colorNoise = smoothstep(noiseFloor, noiseCeil, snoise(
+                vec3(
+                    noiseXY.x * colorFreq.x + uTime * colorFlow,
+                    noiseXY.y * colorFreq.y,
+                    uTime * colorSpeed + colorSeed
+                )
+            ));
 
-        vColor = mix(vColor, uPallete[int(i)], colorNoise);
+            vColor = mix(vColor, uPallete[i] * uIntensity[i], colorNoise);
+        }
+
     }
 
 

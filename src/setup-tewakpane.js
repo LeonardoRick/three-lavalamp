@@ -1,11 +1,11 @@
-import { loadCameraCoordinates } from '@leonardorick/three';
+import { loadCameraCoordinates, loadControlsPosition } from '@leonardorick/three';
 import { BindingApi } from '@tweakpane/core';
 import { Color, Mesh } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Pane } from 'tweakpane';
 import {
   setupNiceInitialCameraPosition,
-  updateCameraCoordinatesOnLocalStorageAndHTML,
+  updateCameraAndControlsOnLocalStorageAndHTML,
 } from './setup-camera';
 
 /**
@@ -75,6 +75,13 @@ function setupUniformTweaks(mesh, pane) {
     label: 'noise',
   });
 
+  pane.addBinding(uniforms.uMainColor, 'value', {
+    label: 'main color',
+    options: [0, 1, 2, 3, 4].reduce((acum, curr) => {
+      acum[String(curr + 1)] = curr;
+      return acum;
+    }, {}),
+  });
   pane.addBinding(uniforms.uColorSeed, 'value', {
     min: 0,
     max: 60,
@@ -114,14 +121,14 @@ function setupUniformTweaks(mesh, pane) {
     min: 0.1,
     max: 0.5,
     step: 0.001,
-    label: 'Noise floor',
+    label: 'color noise floor',
   });
 
   pane.addBinding(uniforms.uNoiseCeil, 'value', {
     min: 0.5,
     max: 1,
     step: 0.001,
-    label: 'Noise ceil',
+    label: 'color noise ceil',
   });
 }
 /**
@@ -136,6 +143,7 @@ function setupColors(mesh, pane, colors, palleteIndex) {
    * @type {{value: Color[]}}
    */
   const meshuPallete = mesh.material.uniforms.uPallete;
+  const meshuIntensity = mesh.material.uniforms.uIntensity;
   /**
    * @type {BindingApi[]}
    */
@@ -145,6 +153,8 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     selected: palleteIndex,
     options: colors.length - 1,
   };
+  // create pallete selector that will update all colors inside
+  // selectedPalleteObj[i].color everytime we change the selection
   const palleteSelector = pane.addBinding(colorsObj, 'selected', {
     options: colors.reduce((acum, _curr, currIndex) => {
       acum[`Pallete ${currIndex}`] = currIndex;
@@ -152,25 +162,42 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     }, {}),
   });
 
+  // this object holds a reference of each color and it's selected intensity as
+  // {
+  //   '0': {
+  //     color: #123421,
+  //     intensity: 1
+  //   }
+  // }
   const selectedPalleteObj = meshuPallete.value.reduce((acum, curr, index) => {
-    acum[String(index)] = `#${curr.getHexString()}`;
+    const i = String(index);
+    acum[i] = {
+      color: `#${curr.getHexString()}`,
+      intensity: meshuIntensity.value[index],
+    };
     return acum;
   }, {});
 
+  // everytime the dropdown changes we need to 1) go over the uPallete uniform from
+  // the mesh material and udpate update each color and 2) update selectedPalleteObj
+  // to reflect the new colors on the tweak panel
   palleteSelector.on('change', ({ value }) => {
     updatingPalleteSelectorFlag = true;
     for (const [i, color] of colors[value].entries()) {
       const c = new Color(color);
       meshuPallete.value[i] = c;
-      selectedPalleteObj[String(i)] = `#${c.getHexString()}`;
+      selectedPalleteObj[String(i)].color = `#${c.getHexString()}`;
     }
 
     for (const bind of selectedPalleteBindings) bind.refresh();
     updatingPalleteSelectorFlag = false;
   });
 
+  // here we create the color pickers for each one of the 5 colors of
+  // the pallete and update the mesh uPallete specific color by it's
+  // index on every color change
   for (const i of Object.keys(selectedPalleteObj)) {
-    const bind = pane.addBinding(selectedPalleteObj, i, {
+    const bind = pane.addBinding(selectedPalleteObj[i], 'color', {
       label: `color ${parseInt(i) + 1}`,
       view: 'color',
       color: { alpha: true },
@@ -178,8 +205,19 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     selectedPalleteBindings.push(bind);
     bind.on('change', () => {
       if (!updatingPalleteSelectorFlag) {
-        meshuPallete.value[i] = new Color(selectedPalleteObj[i]);
+        meshuPallete.value[i] = new Color(selectedPalleteObj[i].color);
       }
+    });
+
+    // intensity bind so we can explode each color
+    const intensityBind = pane.addBinding(selectedPalleteObj[i], 'intensity', {
+      label: `color ${parseInt(i) + 1} intensity`,
+      step: 0.1,
+      min: 0,
+      max: 10,
+    });
+    intensityBind.on('change', (e) => {
+      meshuIntensity.value[i] = e.value;
     });
   }
 }
