@@ -3,7 +3,7 @@ import { Clock, Color, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial } from 't
 import { minimalSetup } from '@leonardorick/three';
 import colors from 'nice-color-palettes';
 import { vertexShader, fragmentShader } from './glsl';
-import { setupTweakPane } from './setup-tewakpanel';
+import { setupTweakPane } from './setup-tewakpane';
 import { setupCamera } from './setup-camera';
 
 import * as I from '../types/typedefs';
