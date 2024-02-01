@@ -7,6 +7,7 @@ uniform vec3 uPallete[5];
 uniform float uInclineXY;
 uniform float uInclineX;
 uniform float uInclineOffset;
+uniform float uBendOnX;
 
 uniform float uNoise;
 
@@ -33,6 +34,8 @@ void main() {
     vec2 noiseXY = uv * vec2(3., 4.);
     float inclineY = uv.y * uInclineXY;
     float inclineX = uv.x * uInclineX;
+
+    float bendOnX = uBendOnX * uv.y * uv.y;
     // twist the shape little bit
     float offset = inclineX * mix(-uInclineOffset, uInclineOffset, uv.y);
 
@@ -41,7 +44,7 @@ void main() {
     float noise = snoise(vec3(noiseXY.x + uTime * 3., noiseXY.y, uTime * 10.));
     // only wave to the top, since it's a plane
     noise = max( 0., noise);
-    vec3 pos = vec3(position.x, position.y, position.z + noise * uNoise + inclineY + inclineX + offset);
+    vec3 pos = vec3(position.x, position.y, position.z + noise * uNoise + inclineY + inclineX + offset + bendOnX);
 
     /**
     * color

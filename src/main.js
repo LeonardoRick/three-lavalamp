@@ -3,7 +3,6 @@ import { Clock, Color, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial } from 't
 import { minimalSetup } from '@leonardorick/three';
 import colors from 'nice-color-palettes';
 import { vertexShader, fragmentShader } from './glsl';
-import { Pane } from 'tweakpane';
 import { setupTweakPane } from './setup-tewakpanel';
 import { setupCamera } from './setup-camera';
 
@@ -25,7 +24,7 @@ export function getLavalamp({ isDev = false } = {}) {
    * mesh
    */
   const mesh = new Mesh(
-    new PlaneGeometry(4, 4, 150, 150),
+    new PlaneGeometry(16, 10, 150, 150),
     new ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -36,9 +35,10 @@ export function getLavalamp({ isDev = false } = {}) {
         uInclineXY: { value: -0.8 },
         uInclineX: { value: 0.1 },
         uInclineOffset: { value: 0.25 },
+        uBendOnX: { value: 18.9 },
 
-        uNoise: { value: 0.3 },
-        uColorSeed: { value: 10 },
+        uNoise: { value: 2.77 },
+        uColorSeed: { value: 9 },
         uColorFlow: { value: 0.3 },
         uColorSpeed: { value: 0.3 },
         uColorFreq: { value: 0.3 },
@@ -70,7 +70,7 @@ export function getLavalamp({ isDev = false } = {}) {
 
   if (isDev) {
     setupCamera(camera, controls, isDev);
-    setupTweakPane(mesh, controls, colors, palleteIndex);
+    setupTweakPane(mesh, camera, controls, colors, palleteIndex);
   }
   return {
     scene,

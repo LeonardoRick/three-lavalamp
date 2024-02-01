@@ -3,15 +3,20 @@ import { BindingApi } from '@tweakpane/core';
 import { Color, Mesh } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Pane } from 'tweakpane';
+import {
+  setupNiceInitialCameraPosition,
+  updateCameraCoordinatesOnLocalStorageAndHTML,
+} from './setup-camera';
 
 /**
  *
  * @param {Mesh} mesh
+ * @param {Camera} camera
  * @param {OrbitControls | undefined} controls
  * @param {string[]} colors
  * @param {number} palleteIndex
  */
-export function setupTweakPane(mesh, controls, colors, palleteIndex) {
+export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
   const pane = new Pane();
   pane.title = 'Lavalamp Configuration';
 
@@ -24,7 +29,7 @@ export function setupTweakPane(mesh, controls, colors, palleteIndex) {
   setupColors(mesh, pane, colors, palleteIndex);
 
   setupCopySettings(mesh, pane);
-  setupToggleCameraCoordinatesVisibility(pane, controls);
+  setupToggleCameraCoordinatesVisibility(pane, camera, controls);
   setupReset(mesh, pane, colors, palleteIndex);
 }
 
@@ -54,6 +59,13 @@ function setupUniformTweaks(mesh, pane) {
     max: 20,
     step: 0.1,
     label: 'twist',
+  });
+
+  pane.addBinding(uniforms.uBendOnX, 'value', {
+    min: -20,
+    max: 20,
+    step: 0.1,
+    label: 'bend on X',
   });
 
   pane.addBinding(uniforms.uNoise, 'value', {
@@ -186,12 +198,15 @@ function setupCopySettings(mesh, pane) {
 /**
  * toggle camera coordinates visibiliity
  * @param {Pane} pane
+ * @param {Camera} camera
  * @param {OrbitControls | undefined} controls
  */
-function setupToggleCameraCoordinatesVisibility(pane, controls) {
+function setupToggleCameraCoordinatesVisibility(pane, camera, controls) {
   const resetCameracoordinates = pane.addButton({ title: 'reset camera coordinates' });
   resetCameracoordinates.on('click', () => {
     controls?.reset();
+    setupNiceInitialCameraPosition(camera);
+    updateCameraCoordinatesOnLocalStorageAndHTML(camera);
   });
 
   const table = document.querySelector('.camera-coordinates');
@@ -216,12 +231,12 @@ function setupToggleCameraCoordinatesVisibility(pane, controls) {
   copyCameraCoordBtn.addEventListener('click', () => {
     const coordinates = loadCameraCoordinates();
     navigator.clipboard.writeText(`
-            coordinates.position.x: ${coordinates.position.x};
-            coordinates.position.y: ${coordinates.position.y};
-            coordinates.position.z: ${coordinates.position.z};
-            coordinates.rotation.x: ${coordinates.rotation.x};
-            coordinates.rotation.y: ${coordinates.rotation.y};
-            coordinates.rotation.z: ${coordinates.rotation.z};
+            camera.position.x = ${coordinates.position.x};
+            camera.position.y = ${coordinates.position.y};
+            camera.position.z = ${coordinates.position.z};
+            camera.rotation.x = ${coordinates.rotation.x};
+            camera.rotation.y = ${coordinates.rotation.y};
+            camera.rotation.z = ${coordinates.rotation.z};
         `);
   });
 }

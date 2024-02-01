@@ -15,14 +15,21 @@ export function setupCamera(camera, controls) {
    * camera positioning
    */
 
-  // camera.rotation.x = 0.03241595243569971;
-  // camera.position.y = -0.05315775380063947;
-  // camera.position.x = -0.059067088047864084;
-  // camera.rotation.y = -0.035997638978877;
-  // camera.position.z = 1.6392895849398614;
-  // camera.rotation.z = 0.0011670540291655281;
-
   createCameraConteiner();
+  setupNiceInitialCameraPosition(camera);
+  loadCameraCoordinates(camera);
+
+  controls.addEventListener('change', () => {
+    updateCameraCoordinatesOnLocalStorageAndHTML(camera);
+  });
+}
+
+/**
+ * @param {Camera} camera
+ */
+export function updateCameraCoordinatesOnLocalStorageAndHTML(camera) {
+  saveCameraCoordinates(camera);
+
   const px = document.getElementById('position-x');
   const py = document.getElementById('position-y');
   const pz = document.getElementById('position-z');
@@ -30,19 +37,29 @@ export function setupCamera(camera, controls) {
   const rx = document.getElementById('rotation-x');
   const ry = document.getElementById('rotation-y');
   const rz = document.getElementById('rotation-z');
-  loadCameraCoordinates(camera);
 
-  controls.addEventListener('change', () => {
-    saveCameraCoordinates(camera);
-    const coordinates = getCameraCoordinates();
-    px.innerHTML = coordinates.position.x;
-    py.innerHTML = coordinates.position.y;
-    pz.innerHTML = coordinates.position.z;
+  const coordinates = getCameraCoordinates();
 
-    rx.innerHTML = coordinates.rotation.x;
-    ry.innerHTML = coordinates.rotation.y;
-    rz.innerHTML = coordinates.rotation.z;
-  });
+  px.innerHTML = coordinates.position.x;
+  py.innerHTML = coordinates.position.y;
+  pz.innerHTML = coordinates.position.z;
+
+  rx.innerHTML = coordinates.rotation.x;
+  ry.innerHTML = coordinates.rotation.y;
+  rz.innerHTML = coordinates.rotation.z;
+}
+
+/**
+ * setup nice initial camera position
+ * @param {Camera} camera
+ */
+export function setupNiceInitialCameraPosition(camera) {
+  camera.position.x = -0.09333556438167928;
+  camera.position.y = -5.573420356836092;
+  camera.position.z = 4.785472583279639;
+  camera.rotation.x = 0.935821950568318;
+  camera.rotation.y = -0.015885914453744706;
+  camera.rotation.z = 0.021557572278148272;
 }
 
 function createCameraConteiner() {
