@@ -79,18 +79,22 @@ export function updateCameraAndControlsOnLocalStorageAndHTML(camera, controls) {
 export function setupNiceInitialCameraPosition(camera, controls) {
   const { position, rotation } = getCameraCoordinates();
   if (!position && !rotation) {
-    camera.position.x = -0.19271820427709524;
-    camera.position.y = -2.3521932853853045;
-    camera.position.z = 3.837729105027273;
-    camera.rotation.x = 0.4270359932134578;
-    camera.rotation.y = -0.06311428002082126;
-    camera.rotation.z = 0.028692484506921502;
+    camera.position.x = -0.022564259301999078;
+    camera.position.y = -3.5549455126039;
+    camera.position.z = 3.231396343006788;
+    camera.rotation.x = 0.8330386098103777;
+    camera.rotation.y = -0.00469682226978494;
+    camera.rotation.z = 0.005167034772869913;
+
+    controls.target.x = -2.782424331791637e-31;
+    controls.target.y = -6.90188201111906e-30;
+    controls.target.z = 4.695345105357163e-46;
   }
 
   if (controls) {
-    controls.target.x = 0.08925135808773098;
-    controls.target.y = -0.5042822081797997;
-    controls.target.z = -0.2232707713823408;
+    controls.target.x = -2.782424331791637e-31;
+    controls.target.y = -6.90188201111906e-30;
+    controls.target.z = 4.695345105357163e-46;
   }
 }
 
@@ -236,6 +240,15 @@ function addStyles() {
 
     .tw-pane .tp-lblv {
       padding: 4px 0;
+    }
+
+    /* increase value of tweakpane box size */
+    .tw-pane .tp-txtv-num {
+      width: 61px;
+    }
+
+    .tw-pane .tp-sldtxtv_s {
+      padding: 0 1px;
     }
   `;
   const style = document.createElement('style');

@@ -2,8 +2,9 @@ uniform __import__snoise; // this line will be replaced by replaceShaderImport f
 
 
 uniform float uTime;
-uniform vec3 uPallete[5];
-uniform float uIntensity[5];
+uniform vec3 uPallete[5]; // five colors 0-4 indexes
+uniform float uIntensity[5]; // five intensities 0-4 indexes
+uniform float uImportance[5]; // five importances 0-4 indexes
 
 uniform float uInclineXY;
 uniform float uInclineX;
@@ -59,7 +60,10 @@ void main() {
     */
     vColor = uPallete[uMainColor] * uIntensity[uMainColor];
 
-    for (int i = 0; i <= 5; i++) {
+
+    float mainImportance = uImportance[uMainColor];
+
+    for (int i = 0; i < 5; i++) {
         if (i != uMainColor) {
             // snoise function seems to not be pure so getting a new instance for each
             // interaction will generate a better random behavior, what we want. But this
@@ -76,15 +80,23 @@ void main() {
             float noiseFloor = uColorNoiseFloor;
             float noiseCeil = uColorNoiseCeil + fi * 0.07;
 
-            float colorNoise = smoothstep(noiseFloor, noiseCeil, snoise(
+            float importance = uImportance[i] / mainImportance;
+
+            float colorNoise = snoise(
                 vec3(
                     noiseXY.x * colorFreq.x + uTime * colorFlow,
                     noiseXY.y * colorFreq.y,
                     uTime * colorSpeed + colorSeed
                 )
-            ));
+            );
 
-            vColor = mix(vColor, uPallete[i] * uIntensity[i], colorNoise);
+            colorNoise = mix(colorNoise, 1., importance - 1.);
+            float smoothColorNoise = smoothstep(noiseFloor, noiseCeil, colorNoise);
+
+
+
+            vColor = mix(vColor, uPallete[i] * uIntensity[i], smoothColorNoise);
+
         }
     }
 

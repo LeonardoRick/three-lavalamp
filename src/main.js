@@ -1,9 +1,9 @@
 import './style.css';
-import { Clock, Color, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
+import { Clock, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { minimalSetup } from '@leonardorick/three';
 import colors from 'nice-color-palettes';
 import { vertexShader, fragmentShader } from './glsl';
-import { setupTweakPane } from './setup-tewakpane';
+import { setuPallete, setupTweakPane } from './setup-tewakpane';
 import { setupCamera } from './setup-camera';
 
 import * as I from '../types/typedefs';
@@ -15,11 +15,13 @@ export function getLavalamp({ isDev = false } = {}) {
   /**
    * color pallete
    */
+  colors.push(['#01eae5', '#0093dd', '#0a1656', '#06042d', '#00343d']);
+
   const favoriteIndexes = [10, 57, 83, 95];
   const palleteIndex = favoriteIndexes[3];
   // const palleteIndex = Math.floor(Math.random() * colors.length);
-  const uPallete = colors[palleteIndex].map((color) => new Color(color));
-
+  // const palleteIndex = 100;
+  const uPallete = setuPallete(colors, palleteIndex);
   /**
    * mesh
    */
@@ -30,21 +32,24 @@ export function getLavalamp({ isDev = false } = {}) {
       uTime: { value: 0 },
       uPallete: { value: uPallete },
       uIntensity: { value: [1, 1, 1, 1, 1] },
+      uImportance: { value: [1, 1, 1, 1, 1] },
 
       uInclineXY: { value: -0.8 },
       uInclineX: { value: 0.1 },
-      uInclineOffset: { value: 0.25 },
-      // uBendOnX: { value: 18.9 },
-      uBendOnX: { value: 1 },
+      uInclineOffset: { value: 0.3 },
+      uBendOnX: { value: 3.9 },
 
-      uNoiseHeight: { value: 2.77 },
-      uNoiseX: { value: 3 },
-      uNoiseY: { value: 4 },
+      uNoiseHeight: { value: 2.3 },
+      uNoiseX: { value: 5 },
+      uNoiseY: { value: 6 },
       uNoiseSpeed: { value: 10 },
       uNoiseFloor: { value: 0 }, // cut the waves at the base
 
-      uMainColor: { value: 4 }, // one of the 0-4 colors of the pallete
-      uColorSeed: { value: 9 },
+      uGrain: { value: 20 },
+      uGrainSpeed: { value: 0.021 },
+
+      uMainColor: { value: 0 }, // one of the 0-4 colors of the pallete
+      uColorSeed: { value: 7 },
       uColorDirectionX: { value: 0.3 },
       uColorSpeed: { value: 0.3 },
       uColorFreq: { value: 0.3 },
