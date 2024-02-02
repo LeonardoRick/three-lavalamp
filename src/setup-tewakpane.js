@@ -1,12 +1,19 @@
 import { loadCameraCoordinates, loadControlsPosition } from '@leonardorick/three';
-import { BindingApi } from '@tweakpane/core';
 import { Color, Mesh } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Pane } from 'tweakpane';
+import { BindingApi, IntColor } from '@tweakpane/core';
 import {
   setupNiceInitialCameraPosition,
   updateCameraAndControlsOnLocalStorageAndHTML,
 } from './setup-camera';
+import { isDefined, keyboardUndoListener } from '@leonardorick/utils';
+
+// this labels are globaly refenced because they are values
+// used to identify the bind later on the code
+
+const SELECTED_PALLETE_LABEL = 'selected pallete';
+const COLOR_LABEL = 'color';
 
 /**
  * @typedef {Object} ISelectedPaletteObj
@@ -40,6 +47,7 @@ export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
   setupToggleCameraCoordinatesVisibility(pane, camera, controls);
 
   setupReset(mesh, pane, colors, palleteIndex, colorsObj, selectedPalleteObj);
+  setupUndoListener(pane);
 }
 
 /**
@@ -129,7 +137,7 @@ function setupUniformTweaks(mesh, pane) {
   });
 
   grain.addBinding(uniforms.uGrainSpeed, 'value', {
-    min: 0.0001,
+    min: 0.00001,
     max: 1,
     step: 0.0001,
     label: 'grain speed',
@@ -185,6 +193,14 @@ function setupUniformTweaks(mesh, pane) {
     step: 0.001,
     label: 'color noise ceil',
   });
+
+  const collorEffects = pane.addFolder({ title: 'color effects' });
+  collorEffects.addBinding(uniforms.uPerlinNoise, 'value', {
+    min: 0,
+    max: 10,
+    step: 0.1,
+    label: 'perlin',
+  });
 }
 /**
  * setup pallete selector
@@ -223,10 +239,12 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     options: colors.length - 1,
   };
 
-  // create pallete selector that will update all colors inside
-  // selectedPalleteObj[i].color everytime we change the selection
+  /**
+   * create pallete selector that will update all colors inside
+   * selectedPalleteObj[i].color everytime we change the selection
+   */
   const palleteSelector = pallete.addBinding(colorsObj, 'selected', {
-    label: 'selected pallete',
+    label: SELECTED_PALLETE_LABEL,
     options: colors.reduce((acum, _curr, currIndex) => {
       acum[`Pallete ${currIndex}`] = currIndex;
       return acum;
@@ -241,14 +259,16 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     }, {}),
   });
 
-  // this object holds a reference of each color and it's selected intensity as
-  // {
-  //   '0': {
-  //     color: #123421,
-  //     intensity: 1,
-  //    importance: 1
-  //   }
-  // }
+  /**
+   *   this object holds a reference of each color and it's selected intensity as
+   * {
+   *   '0': {
+   *    color: #123421,
+   *    intensity: 1,
+   *    importance: 1
+   *   }
+   * }
+   */
   const selectedPalleteObj = uPallete.value.reduce((acum, curr, index) => {
     const i = String(index);
     acum[i] = {
@@ -259,9 +279,11 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     return acum;
   }, {});
 
-  // everytime the dropdown changes we need to 1) go over the uPallete uniform from
-  // the mesh material and udpate update each color and 2) update selectedPalleteObj
-  // to reflect the new colors on the tweak pane
+  /**
+   * everytime the dropdown changes we need to 1) go over the uPallete uniform from
+   * the mesh material and udpate update each color and 2) update selectedPalleteObj
+   * to reflect the new colors on the tweak pane
+   */
   palleteSelector.on('change', ({ value }) => {
     updatingPalleteSelectorFlag = true;
     for (const [i, color] of colors[value].entries()) {
@@ -274,13 +296,15 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     updatingPalleteSelectorFlag = false;
   });
 
-  // here we create the color pickers for each one of the 5 colors of
-  // the pallete and update the mesh uPallete specific color by it's
-  // index on every color change
+  /**
+   * create the color pickers for each one of the 5 colors of
+   * the pallete and update the mesh uPallete specific color by it's
+   * index on every color change
+   */
   for (const si of Object.keys(selectedPalleteObj)) {
     const i = parseInt(si);
     const bind = pallete.addBinding(selectedPalleteObj[si], 'color', {
-      label: `color ${i + 1}`,
+      label: `${COLOR_LABEL} ${i + 1}`,
       view: 'color',
       color: { alpha: true },
     });
@@ -294,29 +318,30 @@ function setupColors(mesh, pane, colors, palleteIndex) {
     /**
      * intensity bind so we can explode each color
      */
-    const intensityBind = pallete.addBinding(selectedPalleteObj[si], 'intensity', {
-      label: `color ${i + 1} intensity`,
-      step: 0.1,
-      min: 0,
-      max: 10,
-    });
-    intensityBind.on('change', (e) => {
-      uIntensity.value[i] = e.value;
-    });
+    pallete
+      .addBinding(selectedPalleteObj[si], 'intensity', {
+        label: `color ${i + 1} intensity`,
+        step: 0.1,
+        min: 0,
+        max: 10,
+      })
+      .on('change', (e) => {
+        uIntensity.value[i] = e.value;
+      });
 
     /**
      * importance bind so the color is more present than the others
      */
-    const importanceBind = pallete.addBinding(selectedPalleteObj[i], 'importance', {
-      label: `color ${i + 1} importance`,
-      step: 0.05,
-      min: 0.1,
-      max: 5,
-    });
-
-    importanceBind.on('change', (e) => {
-      uImportance.value[i] = e.value;
-    });
+    pallete
+      .addBinding(selectedPalleteObj[i], 'importance', {
+        label: `color ${i + 1} importance`,
+        step: 0.05,
+        min: 0.1,
+        max: 5,
+      })
+      .on('change', (e) => {
+        uImportance.value[i] = e.value;
+      });
   }
   return {
     colorsObj,
@@ -411,6 +436,7 @@ function setupReset(mesh, pane, colors, palleteIndex, colorsObj, selectedPallete
   const resetBtn = pane.addButton({ title: 'reset' });
   resetBtn.on('click', () => {
     const initialUniforms = JSON.parse(initialUniformsString);
+
     initialUniforms.uPallete.value = setuPallete(colors, palleteIndex);
     /**
      * reset uniform bindings
@@ -426,20 +452,18 @@ function setupReset(mesh, pane, colors, palleteIndex, colorsObj, selectedPallete
     colorsObj.selected = palleteIndex;
 
     /**
-     * reset specific colors, intensity and importance
-     */
-    /**
+     * reset specific colors, intensity and importance.
      * After structuredClone, the THREE.Color type becomes a simple POJO with the important values to retrieve the Color class, so we need to convert
      * it back to a Color instance so we can call getHexString()
      * @type {{uPallete: {value: {r: number, g: number, b: number, isColor: true}}, uIntensity: {value: number[]}, uImportance: {value: number[]}}}
      */
-    const { uPallete: _uPallete, uIntensity, uImportance } = initialUniforms;
+    const { uPallete, uIntensity, uImportance } = initialUniforms;
     for (const [si, color] of Object.entries(selectedPalleteObj)) {
       const i = parseInt(si);
 
-      // we don't need to update the color because updating the selected
-      // pallete automatically updates all colors on 'change'
-      // color.color = `#${new Color(uPallete.value[i]).getHexString()}`;
+      // even updating the pallete entirely we need to update the color
+      // here because sometimes the pallete didn't change but the colors did
+      color.color = `#${new Color(uPallete.value[i]).getHexString()}`;
       color.intensity = uIntensity.value[i];
       color.importance = uImportance.value[i];
     }
@@ -456,4 +480,117 @@ function setupReset(mesh, pane, colors, palleteIndex, colorsObj, selectedPallete
  */
 export function setuPallete(colors, palleteIndex) {
   return colors[palleteIndex].map((color) => new Color(color)).slice();
+}
+
+/**
+ * setup undo listner to undo up to 10 moves
+ * @param {Pane} pane
+ */
+function setupUndoListener(pane) {
+  let lastEvents = [];
+  let undoFlag = false;
+
+  const oldValueMap = new WeakMap();
+  setupOriginValue(pane.children);
+  setupKeyboardListener();
+  setupPaneChangeListener();
+
+  function setupKeyboardListener() {
+    keyboardUndoListener(() => {
+      undoFlag = true;
+
+      if (lastEvents.length) {
+        const { event, oldValue } = lastEvents.pop();
+        if (event) {
+          /**
+           * @type {BindingApi}
+           */
+          const target = event.target;
+          target.controller.value.setRawValue(oldValue);
+          /**
+           * Removes 5 colors from queue after updating pallete
+           * if event a pallete change we need to remove from the list the last
+           * five events that changed the colors on the color pickers themselves.
+           */
+          if (event.target.label === SELECTED_PALLETE_LABEL) {
+            let counter = 0;
+            lastEvents = lastEvents.filter((item) => {
+              // console.log(item.event.target.label);
+              const isColor = item.event.target.label.match(new RegExp(`${COLOR_LABEL} [1-5]`));
+              if (isColor) {
+                counter++;
+              }
+              return !isColor || counter > 5;
+            });
+          }
+
+          // another approach of programatically writing
+          // // const { writer_, target: bindingTarget } = target.controller.value.binding;
+          // // writer_(bindingTarget, value);
+          pane.refresh();
+        }
+        console.log('event POPPED!!', event, lastEvents);
+      }
+
+      undoFlag = false;
+    });
+  }
+
+  function setupPaneChangeListener() {
+    pane.on('change', (e) => {
+      /**
+       * @type {BindingApi}
+       */
+      const target = e.target;
+
+      if (e.last) {
+        const inputBindingValue = target.controller.value;
+        const meta = oldValueMap.get(inputBindingValue);
+        // update old value even on "undo events" so we have the right
+        // value after pressing ctrl + z multiple times for the same binding
+        oldValueMap.set(inputBindingValue, inputBindingValue.rawValue);
+        const oldValue = meta ? meta : inputBindingValue.originValue;
+        console.log(inputBindingValue.rawValue, oldValue);
+        if (!undoFlag && isDefined(oldValue) && inputBindingValue.rawValue !== oldValue) {
+          lastEvents.push({ event: e, oldValue });
+          console.log('EVENT QUEUED', e, oldValue, lastEvents);
+          // we can go back up to 50 times
+          if (lastEvents.length > 50) {
+            lastEvents.shift();
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * we need the origin value stored because tweakpanel don't save this value and then we can't access it
+   * on the panel.change event. For further values we handle inside the panel.change event but the first
+   * one we need to save a reference to retrieve later when rawValue is already overwritten
+   * @param {any[]} pane
+   */
+  function setupOriginValue(pane) {
+    for (const bind of pane) {
+      if (bind.children) {
+        setupOriginValue(bind.children);
+      }
+      const { value } = bind.controller;
+      if (isDefined(value?.rawValue)) {
+        const { rawValue } = value;
+        if (isIntColor(rawValue)) {
+          value.originValue = new IntColor(structuredClone(rawValue));
+        } else {
+          value.originValue = rawValue;
+        }
+      }
+    }
+
+    /**
+     * somehow instanceof IntColor doesnt work because it's a _IntColor instance!!
+     * @param {any} value
+     */
+    function isIntColor(value) {
+      return value instanceof IntColor || (value._comps?.length && value.mode && value.type);
+    }
+  }
 }

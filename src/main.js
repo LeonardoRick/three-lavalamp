@@ -7,6 +7,8 @@ import { setuPallete, setupTweakPane } from './setup-tewakpane';
 import { setupCamera } from './setup-camera';
 
 import * as I from '../types/typedefs';
+
+export const favoriteIndexes = [10, 57, 83, 95];
 /**
  * @param {I.IgetLavaLampOptions}
  * @returns {I.IgetLavaLampReturnType}
@@ -15,13 +17,12 @@ export function getLavalamp({ isDev = false } = {}) {
   /**
    * color pallete
    */
-  colors.push(['#01eae5', '#0093dd', '#0a1656', '#06042d', '#00343d']);
-
-  const favoriteIndexes = [10, 57, 83, 95];
-  const palleteIndex = favoriteIndexes[3];
+  addNewPalletes(colors);
+  // const palleteIndex = favoriteIndexes[3];
   // const palleteIndex = Math.floor(Math.random() * colors.length);
-  // const palleteIndex = 100;
+  const palleteIndex = 100;
   const uPallete = setuPallete(colors, palleteIndex);
+
   /**
    * mesh
    */
@@ -56,6 +57,8 @@ export function getLavalamp({ isDev = false } = {}) {
       uColorFreqY: { value: 0.13 },
       uColorNoiseFloor: { value: 0 },
       uColorNoiseCeil: { value: 0.6 },
+
+      uPerlinNoise: { value: 0 },
     },
     side: DoubleSide,
     // wireframe: true,
@@ -86,6 +89,10 @@ export function getLavalamp({ isDev = false } = {}) {
     scene,
     mesh,
   };
+}
+
+function addNewPalletes(palletes) {
+  palletes.push(['#01eae5', '#0093dd', '#0a1656', '#06042d', '#00343d']);
 }
 
 export default getLavalamp;

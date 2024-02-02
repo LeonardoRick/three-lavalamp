@@ -23,7 +23,8 @@
     "vite-plugin-glsl": "^1.2.1"
   },
   "dependencies": {
-    "@leonardorick/three": "^1.0.40",
+    "@leonardorick/three": "^1.0.45",
+    "@leonardorick/utils": "^0.0.22",
     "nice-color-palettes": "^3.0.0",
     "three": "^0.160.1",
     "tweakpane": "^4.0.3"

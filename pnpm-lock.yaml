@@ -6,8 +6,11 @@ settings:
 
 dependencies:
   '@leonardorick/three':
-    specifier: ^1.0.40
-    version: 1.0.40(@leonardorick/utils@0.0.19)(three@0.160.1)
+    specifier: ^1.0.45
+    version: 1.0.45(@leonardorick/utils@0.0.22)(three@0.160.1)
+  '@leonardorick/utils':
+    specifier: ^0.0.22
+    version: 0.0.22
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -241,18 +244,18 @@ packages:
     dev: true
     optional: true
 
-  /@leonardorick/three@1.0.40(@leonardorick/utils@0.0.19)(three@0.160.1):
-    resolution: {integrity: sha512-N5veaqxgUnqQfwHeQ2wpoxrIu5A+ioop+TJqPbRqkZA2xtCcGCeNcxfy5JygR0P7anMqkfjT240GJcOoj71sDQ==}
+  /@leonardorick/three@1.0.45(@leonardorick/utils@0.0.22)(three@0.160.1):
+    resolution: {integrity: sha512-pzOU/Dr0wozuK0eXY+ZitlNp3QQ1uhJJUafojXYL115V5cCgpp9aMEYYWvslpuzs3a016tgSO433I029UL4Ohg==}
     peerDependencies:
-      '@leonardorick/utils': '>=0.0.19'
+      '@leonardorick/utils': '>=0.0.21'
       three: '>=0.160.1'
     dependencies:
-      '@leonardorick/utils': 0.0.19
+      '@leonardorick/utils': 0.0.22
       three: 0.160.1
     dev: false
 
-  /@leonardorick/utils@0.0.19:
-    resolution: {integrity: sha512-zQaiAfcQ1kjrEfplhcBCtL6uFmBL5xkQug0cv2X7//z8AGyxPLtsD5s12401SDa9kYVzNhpRbgE6r8+FilwHnA==}
+  /@leonardorick/utils@0.0.22:
+    resolution: {integrity: sha512-MXXua1eUQ1FSxjF+1reusewcEcFCrTFT9SOlB+3ikLnVuLaONhlRxOIgl2bqCwYm7iLML4s9xVsjso5pCP7R4Q==}
     dev: false
 
   /@rollup/pluginutils@5.1.0:

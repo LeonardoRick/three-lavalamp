@@ -4,7 +4,7 @@ import glsl from 'vite-plugin-glsl';
 export default defineConfig({
   plugins: [glsl()],
   optimizeDeps: {
-    exclude: ['@leonardorick/three'],
+    exclude: ['@leonardorick/three', '@leonardorick/utils'],
   },
   build: {
     lib: {

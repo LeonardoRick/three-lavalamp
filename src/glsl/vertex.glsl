@@ -1,5 +1,6 @@
-uniform __import__snoise; // this line will be replaced by replaceShaderImport function
-
+// this line will be replaced by replaceShaderImport function;
+uniform __import__shared;
+uniform __import__snoise;
 
 uniform float uTime;
 uniform vec3 uPallete[5]; // five colors 0-4 indexes
@@ -29,8 +30,6 @@ uniform float uColorNoiseCeil;
 
 varying vec2 vUv;
 varying vec3 vColor;
-
-float PI = 3.141592653589793238;
 
 void main() {
     vUv = uv;

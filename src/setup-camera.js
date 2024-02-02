@@ -239,7 +239,7 @@ function addStyles() {
     }
 
     .tw-pane .tp-lblv {
-      padding: 4px 0;
+      padding: 2px 0;
     }
 
     /* increase value of tweakpane box size */

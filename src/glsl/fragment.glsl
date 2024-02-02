@@ -1,3 +1,7 @@
+// this __import__ lines will be replaced by replaceShaderImport function
+uniform __import__shared;
+uniform __import__cnoise;
+
 varying vec2 vUv;
 varying vec3 vColor;
 
@@ -5,7 +9,7 @@ uniform float uTime;
 uniform float uGrain;
 uniform float uGrainSpeed;
 
-float PI = 3.141592653589793238;
+uniform float uPerlinNoise;
 
 float grain(vec2 seed, float time, float timeMultiplier)
 {
@@ -17,4 +21,5 @@ void main() {
 	vec3 grainEffect = vec3(grain(gl_FragCoord.xy, uTime, uGrainSpeed));
 	gl_FragColor = vec4(vColor, 1);
 	gl_FragColor.rgb += grainEffect * uGrain;
+	gl_FragColor.rgb += cnoise(gl_FragColor.rgb) * uPerlinNoise;
 }
