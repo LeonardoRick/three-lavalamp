@@ -242,13 +242,16 @@ function addStyles() {
       padding: 2px 0;
     }
 
-    /* increase value of tweakpane box size */
     .tw-pane .tp-txtv-num {
       width: 61px;
     }
 
     .tw-pane .tp-sldtxtv_s {
       padding: 0 1px;
+    }
+
+    .tw-pane .tp-lblv_l {
+      padding-right: 8px;
     }
   `;
   const style = document.createElement('style');

@@ -80,7 +80,6 @@ void main() {
             float noiseCeil = uColorNoiseCeil + fi * 0.07;
 
             float importance = uImportance[i] / mainImportance;
-
             float colorNoise = snoise(
                 vec3(
                     noiseXY.x * colorFreq.x + uTime * colorFlow,

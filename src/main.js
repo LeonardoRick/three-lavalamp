@@ -1,5 +1,13 @@
 import './style.css';
-import { Clock, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
+import {
+  Clock,
+  DoubleSide,
+  Mesh,
+  PlaneGeometry,
+  ShaderMaterial,
+  Vector2,
+  WebGLRenderer,
+} from 'three';
 import { minimalSetup } from '@leonardorick/three';
 import colors from 'nice-color-palettes';
 import { vertexShader, fragmentShader } from './glsl';
@@ -7,6 +15,7 @@ import { setuPallete, setupTweakPane } from './setup-tewakpane';
 import { setupCamera } from './setup-camera';
 
 import * as I from '../types/typedefs';
+import { normalize } from '@leonardorick/utils';
 
 export const favoriteIndexes = [10, 57, 83, 95];
 /**
@@ -31,6 +40,9 @@ export function getLavalamp({ isDev = false } = {}) {
     fragmentShader,
     uniforms: {
       uTime: { value: 0 },
+      uResolution: { value: new Vector2(0, 0) },
+      uMousePosition: { value: new Vector2(0, 0) },
+
       uPallete: { value: uPallete },
       uIntensity: { value: [1, 1, 1, 1, 1] },
       uImportance: { value: [1, 1, 1, 1, 1] },
@@ -48,6 +60,9 @@ export function getLavalamp({ isDev = false } = {}) {
 
       uGrain: { value: 20 },
       uGrainSpeed: { value: 0.021 },
+
+      uMouseIntensity: { value: 0.2 },
+      uMouseRadius: { value: 0.3 },
 
       uMainColor: { value: 0 }, // one of the 0-4 colors of the pallete
       uColorSeed: { value: 7 },
@@ -69,17 +84,36 @@ export function getLavalamp({ isDev = false } = {}) {
    * main scene
    */
   const clock = new Clock();
-  const animationCallback = () => {
-    const elapsedTime = clock.getElapsedTime() * 0.003;
-    mesh.material.uniforms.uTime.value = elapsedTime;
-  };
-
-  const { renderer, scene, controls, camera } = minimalSetup({
+  const { uniforms } = mesh.material;
+  const { renderer, scene, controls, camera, canvas } = minimalSetup({
     enableOrbitControl: isDev,
     mesh,
-    animationCallback,
+    animationCallback: () => {
+      const elapsedTime = clock.getElapsedTime() * 0.003;
+      uniforms.uTime.value = elapsedTime;
+    },
+    resizeCallback: ({ renderer }) => {
+      uniforms.uResolution.value = getRendererSize(renderer);
+    },
   });
+  /**
+   * initial setup affect accessing renderer and canvas
+   */
   renderer.setClearColor(0x000000, 0); // the default;
+  uniforms.uResolution.value = getRendererSize(renderer);
+
+  canvas.addEventListener('mousemove', (ev) => {
+    uniforms.uMousePosition.value = getNormalizedMousePosition(ev, canvas);
+  });
+
+  /**
+   * get renderer size (x, y)
+   * @param {WebGLRenderer} renderer
+   * @returns {Vector2} renderer size
+   */
+  function getRendererSize(renderer) {
+    return renderer.getSize(new Vector2());
+  }
 
   if (isDev) {
     setupCamera(camera, controls, isDev);
@@ -95,4 +129,10 @@ function addNewPalletes(palletes) {
   palletes.push(['#01eae5', '#0093dd', '#0a1656', '#06042d', '#00343d']);
 }
 
+function getNormalizedMousePosition(event, canvas) {
+  return {
+    x: normalize(event.clientX, canvas.clientWidth) - 0.165,
+    y: normalize(event.clientY, canvas.clientHeight, { inverted: true }) - 0.15,
+  };
+}
 export default getLavalamp;

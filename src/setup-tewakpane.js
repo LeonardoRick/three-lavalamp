@@ -38,7 +38,7 @@ export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
   pane.element.classList.add('tw-pane'); // used to style on style.css
   const paneTag = document.querySelector('.tp-dfwv');
   if (paneTag) {
-    paneTag.style.width = '370px';
+    paneTag.style.width = '380px';
   }
   setupUniformTweaks(mesh, pane);
   const { colorsObj, selectedPalleteObj } = setupColors(mesh, pane, colors, palleteIndex);
@@ -141,6 +141,20 @@ function setupUniformTweaks(mesh, pane) {
     max: 1,
     step: 0.0001,
     label: 'grain speed',
+  });
+
+  const mouse = pane.addFolder({ title: 'mouse' });
+  mouse.addBinding(uniforms.uMouseIntensity, 'value', {
+    min: -2,
+    max: 2,
+    step: 0.1,
+    label: 'mouse effect brightness',
+  });
+  mouse.addBinding(uniforms.uMouseRadius, 'value', {
+    min: 0,
+    max: 1,
+    step: 0.05,
+    label: 'mouse effect radius',
   });
 
   const color = pane.addFolder({ title: 'color' });
@@ -358,10 +372,16 @@ function setupCopySettings(mesh, pane) {
   const copySettingsBtn = pane.addButton({ title: 'copy' });
   copySettingsBtn.on('click', () => {
     const config = JSON.stringify(mesh.material.uniforms, null, 4);
-    const text = config.replace(
-      /"uPallete": {(value|[\s":0-9,\[\]])*}/g,
-      '"uPallete": {value: uPallete}'
-    );
+    const text = config
+      .replace(/"uPallete": {(value|[\s":0-9,\[\]])*}/g, 'uPallete: {value: uPallete}')
+      .replace(
+        /"uMousePosition": {(value|[.\s":{0-9xy,])*}\s*}/g,
+        'uMousePosition: { value: new Vector2(0, 0) }'
+      )
+      .replace(
+        /"uResolution": {(value|[.\s":{0-9xy,])*}\s*}/g,
+        'uResolution: { value: new Vector2(0, 0) }'
+      );
     navigator.clipboard.writeText(text);
   });
 }
@@ -515,7 +535,6 @@ function setupUndoListener(pane) {
           if (event.target.label === SELECTED_PALLETE_LABEL) {
             let counter = 0;
             lastEvents = lastEvents.filter((item) => {
-              // console.log(item.event.target.label);
               const isColor = item.event.target.label.match(new RegExp(`${COLOR_LABEL} [1-5]`));
               if (isColor) {
                 counter++;
@@ -529,7 +548,6 @@ function setupUndoListener(pane) {
           // // writer_(bindingTarget, value);
           pane.refresh();
         }
-        console.log('event POPPED!!', event, lastEvents);
       }
 
       undoFlag = false;
@@ -550,10 +568,8 @@ function setupUndoListener(pane) {
         // value after pressing ctrl + z multiple times for the same binding
         oldValueMap.set(inputBindingValue, inputBindingValue.rawValue);
         const oldValue = meta ? meta : inputBindingValue.originValue;
-        console.log(inputBindingValue.rawValue, oldValue);
         if (!undoFlag && isDefined(oldValue) && inputBindingValue.rawValue !== oldValue) {
           lastEvents.push({ event: e, oldValue });
-          console.log('EVENT QUEUED', e, oldValue, lastEvents);
           // we can go back up to 50 times
           if (lastEvents.length > 50) {
             lastEvents.shift();
