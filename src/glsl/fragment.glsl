@@ -10,7 +10,8 @@ uniform float uTime;
 uniform vec2 uResolution;
 uniform vec2 uMousePosition;
 
-uniform float uMouseIntensity;
+uniform float uMouseBrightness;
+uniform float uMousePerlin;
 uniform float uMouseRadius;
 
 uniform float uGrain;
@@ -32,7 +33,8 @@ void main() {
 	color += grainEffect * uGrain;
 
 	// apply perlin noise
-	color += cnoise(color) * uPerlinNoise;
+	float perlin = cnoise(color);
+	color += perlin * uPerlinNoise;
 
     // Convert gl_FragCoord from pixels to the same [0, 1] range for accurate distance calculation
     vec2 fragCoordNormalized = gl_FragCoord.xy / uResolution;
@@ -41,10 +43,8 @@ void main() {
  	// Modify this line to adjust the influence of the mouse position over the noise.
     // For example, you could make the noise effect stronger as the fragment is closer to the mouse position
     float mouseInfluence = 1.0 - smoothstep(0.0, uMouseRadius, dist); // Adjust the 0.5 value as needed
-	// Calculate the noise based on the fragment's position
-    // float noise = snoise(vec3(vUv * uResolution, uTime));
-	// Mix the noise effect with the base color based on the mouse influence
-    color += vec3(mouseInfluence * uMouseIntensity);
+	// Mix the perlin effect with the base color based on the mouse influence
+    color += (mouseInfluence * uMouseBrightness) + (mouseInfluence * perlin * uMousePerlin);
 
 	gl_FragColor = vec4(color, 1);
 }

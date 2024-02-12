@@ -144,12 +144,20 @@ function setupUniformTweaks(mesh, pane) {
   });
 
   const mouse = pane.addFolder({ title: 'mouse' });
-  mouse.addBinding(uniforms.uMouseIntensity, 'value', {
-    min: -2,
-    max: 2,
+  mouse.addBinding(uniforms.uMouseBrightness, 'value', {
+    min: -3,
+    max: 3,
     step: 0.1,
     label: 'mouse effect brightness',
   });
+
+  mouse.addBinding(uniforms.uMousePerlin, 'value', {
+    min: -3,
+    max: 3,
+    step: 0.1,
+    label: 'mouse effect perlin',
+  });
+
   mouse.addBinding(uniforms.uMouseRadius, 'value', {
     min: 0,
     max: 1,

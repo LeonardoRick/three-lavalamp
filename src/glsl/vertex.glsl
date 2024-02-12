@@ -59,9 +59,7 @@ void main() {
     */
     vColor = uPallete[uMainColor] * uIntensity[uMainColor];
 
-
     float mainImportance = uImportance[uMainColor];
-
     for (int i = 0; i < 5; i++) {
         if (i != uMainColor) {
             // snoise function seems to not be pure so getting a new instance for each
@@ -76,8 +74,8 @@ void main() {
             // play with this value to show more randomness on the colors (more messy)
             vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
 
-            float noiseFloor = uColorNoiseFloor;
-            float noiseCeil = uColorNoiseCeil + fi * 0.07;
+            float colorNoiseFloor = uColorNoiseFloor;
+            float colorNoiseCeil = uColorNoiseCeil + fi * 0.07;
 
             float importance = uImportance[i] / mainImportance;
             float colorNoise = snoise(
@@ -89,12 +87,9 @@ void main() {
             );
 
             colorNoise = mix(colorNoise, 1., importance - 1.);
-            float smoothColorNoise = smoothstep(noiseFloor, noiseCeil, colorNoise);
-
-
+            float smoothColorNoise = smoothstep(colorNoiseFloor, colorNoiseCeil, colorNoise);
 
             vColor = mix(vColor, uPallete[i] * uIntensity[i], smoothColorNoise);
-
         }
     }
 

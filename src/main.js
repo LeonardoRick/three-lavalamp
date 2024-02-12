@@ -61,8 +61,9 @@ export function getLavalamp({ isDev = false } = {}) {
       uGrain: { value: 20 },
       uGrainSpeed: { value: 0.021 },
 
-      uMouseIntensity: { value: 0.2 },
-      uMouseRadius: { value: 0.3 },
+      uMouseBrightness: { value: 0.3 },
+      uMousePerlin: { value: 0.9 },
+      uMouseRadius: { value: 0.25 },
 
       uMainColor: { value: 0 }, // one of the 0-4 colors of the pallete
       uColorSeed: { value: 7 },
