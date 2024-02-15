@@ -14,6 +14,10 @@ import { isDefined, keyboardUndoListener } from '@leonardorick/utils';
 
 const SELECTED_PALLETE_LABEL = 'selected pallete';
 const COLOR_LABEL = 'color';
+/**
+ * @type {Pane}
+ */
+let pane;
 
 /**
  * @typedef {Object} ISelectedPaletteObj
@@ -32,7 +36,11 @@ const COLOR_LABEL = 'color';
  * @param {number} palleteIndex
  */
 export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
-  const pane = new Pane();
+  if (document.querySelector('.tw-pane-lavalamp')) {
+    console.warn('refreshing tweakpane');
+    if (pane) pane.dispose();
+  }
+  pane = new Pane();
   pane.title = 'Lavalamp Configuration';
 
   pane.element.classList.add('tw-pane-lavalamp'); // used to style on style.css
