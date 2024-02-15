@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@leonardorick/three':
-    specifier: ^1.0.49
-    version: 1.0.49(@leonardorick/utils@0.0.24)(three@0.160.1)
+    specifier: ^1.0.51
+    version: 1.0.51(@leonardorick/utils@0.0.24)(three@0.160.1)
   '@leonardorick/utils':
     specifier: ^0.0.24
     version: 0.0.24
@@ -244,8 +244,8 @@ packages:
     dev: true
     optional: true
 
-  /@leonardorick/three@1.0.49(@leonardorick/utils@0.0.24)(three@0.160.1):
-    resolution: {integrity: sha512-BJDR0w9fxGfo9SGg1EcJ5ZD6uIaVnP2xuWzX7bvVxHU4eVjNrUIfWS8UMxIb8JSZytSsWnODfApWdI8MkQ+soA==}
+  /@leonardorick/three@1.0.51(@leonardorick/utils@0.0.24)(three@0.160.1):
+    resolution: {integrity: sha512-9pghPvSsCgi0oc0MA9AxHK82al/N0q6u7jVt3ihBJjrx1HYNBXXOm3tjP93buVeTRuzKoDgkL77+j35p9MSWwA==}
     peerDependencies:
       '@leonardorick/utils': '>=0.0.22'
       three: '>=0.160.1'

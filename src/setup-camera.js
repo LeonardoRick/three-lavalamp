@@ -233,24 +233,24 @@ function addStyles() {
     }
 
     /* change panel styles of tweakpane */
-    .tw-pane.tp-rotv {
+    .tw-pane-lavalamp.tp-rotv {
       font-size: 14px;
       padding: 4px;
     }
 
-    .tw-pane .tp-lblv {
+    .tw-pane-lavalamp .tp-lblv {
       padding: 2px 0;
     }
 
-    .tw-pane .tp-txtv-num {
+    .tw-pane-lavalamp .tp-txtv-num {
       width: 61px;
     }
 
-    .tw-pane .tp-sldtxtv_s {
+    .tw-pane-lavalamp .tp-sldtxtv_s {
       padding: 0 1px;
     }
 
-    .tw-pane .tp-lblv_l {
+    .tw-pane-lavalamp .tp-lblv_l {
       padding-right: 8px;
     }
   `;

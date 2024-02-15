@@ -35,7 +35,7 @@ export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
   const pane = new Pane();
   pane.title = 'Lavalamp Configuration';
 
-  pane.element.classList.add('tw-pane'); // used to style on style.css
+  pane.element.classList.add('tw-pane-lavalamp'); // used to style on style.css
   const paneTag = document.querySelector('.tp-dfwv');
   if (paneTag) {
     paneTag.style.width = '380px';

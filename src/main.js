@@ -37,6 +37,7 @@ export function getLavalamp({
    */
   isDev = false,
   wireframe = false,
+  addMeshOnScene = false,
 
   /**
    * uniforms
@@ -124,8 +125,9 @@ export function getLavalamp({
   const clock = new Clock();
   const { uniforms } = mesh.material;
   const { renderer, scene, controls, camera, canvas } = minimalSetup({
-    enableOrbitControl: isDev,
+    addMeshOnScene,
     mesh,
+    enableOrbitControl: isDev,
     animationCallback: () => {
       const elapsedTime = clock.getElapsedTime() * 0.003;
       uniforms.uTime.value = elapsedTime;
@@ -160,6 +162,7 @@ export function getLavalamp({
   return {
     scene,
     mesh,
+    material,
   };
 }
 

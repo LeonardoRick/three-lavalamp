@@ -3,6 +3,7 @@ import type { Color, Mesh, Scene, Vector2 } from 'three';
 interface IgetLavaLampOptions {
   isDev?: boolean;
   wireframe?: boolean;
+  addMeshOnScene?: boolean;
 
   uTime?: { value: number };
   uResolution?: { value: Vector2 };
