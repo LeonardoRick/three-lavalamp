@@ -124,7 +124,7 @@ export function getLavalamp({
    */
   const clock = new Clock();
   const { uniforms } = mesh.material;
-  const { renderer, scene, controls, camera, canvas } = minimalSetup({
+  const { renderer, scene, controls, camera, canvas, animationId } = minimalSetup({
     addMeshOnScene,
     mesh,
     enableOrbitControl: isDev,
@@ -142,9 +142,10 @@ export function getLavalamp({
   renderer.setClearColor(0x000000, 0); // the default;
   uniforms.uResolution.value = getRendererSize(renderer);
 
-  canvas.addEventListener('mousemove', (ev) => {
+  const mouseMoveHandler = (ev) => {
     uniforms.uMousePosition.value = getNormalizedMousePosition(ev, canvas);
-  });
+  };
+  canvas.addEventListener('mousemove', mouseMoveHandler);
 
   /**
    * get renderer size (x, y)
@@ -159,10 +160,21 @@ export function getLavalamp({
     setupCamera(camera, controls, isDev);
     setupTweakPane(mesh, camera, controls, colors, palleteIndex);
   }
+
+  function cleanup() {
+    cancelAnimationFrame(animationId);
+    canvas.removeEventListener('mousemove', mouseMoveHandler);
+    mesh.geometry.dispose();
+    material.dispose();
+    scene.clear();
+    renderer.dispose();
+  }
+
   return {
     scene,
     mesh,
     material,
+    cleanup,
   };
 }
 
@@ -176,4 +188,5 @@ function getNormalizedMousePosition(event, canvas) {
     y: normalize(event.clientY, canvas.clientHeight, { inverted: true }) - 0.15,
   };
 }
+
 export default getLavalamp;
