@@ -1,4 +1,4 @@
-import { Color, Scene, Vector2 } from 'three';
+import { Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
 
 /**
  * @typedef IgetLavaLampOptions
@@ -6,7 +6,14 @@ import { Color, Scene, Vector2 } from 'three';
  * @property {boolean} isDev
  * @property {boolean} wireframe
  * @property {boolean} addMeshOnScene
+ * antialias affects performance but gives a better rendering
+ * @property {boolean} antialias,
+ * powerPreference options: 'high-performance' | 'low-power' | 'default'
+ * @property {'high-performance' | 'low-power' | 'default'} powerPreference
+ * if the backgorund is transparent or not
+ * @property {boolean} transparent,
  *
+ * uniforms:
  * @property {{value: number}} uTime
  * @property {{value: Vector2}} uResolution
  * @property {{value: Vector2}} uMousePosition
@@ -47,4 +54,7 @@ import { Color, Scene, Vector2 } from 'three';
  * @typedef IgetLavaLampReturnType,
  * @property {Scene} scene
  * @property {Mesh} mesh
+ * @property {ShaderMaterial} material
+ * @property {WebGLRenderer} renderer
+ * @property {() => void} cleanup
  */

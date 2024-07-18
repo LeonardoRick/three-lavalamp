@@ -39,6 +39,12 @@ export function getLavalamp({
   isDev = false,
   wireframe = false,
   addMeshOnScene = false,
+  // antialias affects performance but gives a better rendering
+  antialias = false,
+  // powerPreference options: 'high-performance' | 'low-power' | 'default'
+  powerPreference = 'default',
+  // if the backgorund is transparent or not
+  transparent = false,
 
   /**
    * uniforms
@@ -84,6 +90,7 @@ export function getLavalamp({
   const material = new ShaderMaterial({
     vertexShader,
     fragmentShader,
+    transparent,
     uniforms: {
       uTime,
       uResolution,
@@ -129,6 +136,8 @@ export function getLavalamp({
     canvasId,
     addMeshOnScene,
     mesh,
+    antialias,
+    powerPreference,
     enableOrbitControl: isDev,
     animationCallback: () => {
       const elapsedTime = clock.getElapsedTime() * 0.003;
@@ -176,6 +185,7 @@ export function getLavalamp({
     scene,
     mesh,
     material,
+    renderer,
     cleanup,
   };
 }

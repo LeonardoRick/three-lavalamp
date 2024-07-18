@@ -1,11 +1,19 @@
-import type { Color, Mesh, Scene, Vector2 } from 'three';
+import type { Color, Mesh, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
 
 interface IgetLavaLampOptions {
   canvasId?: string;
   isDev?: boolean;
   wireframe?: boolean;
   addMeshOnScene?: boolean;
-
+  // antialias affects performance but gives a better rendering
+  antialias: boolean;
+  // powerPreference options: 'high-performance' | 'low-power' | 'default'
+  powerPreference: 'high-performance' | 'low-power' | 'default';
+  // if the backgorund is transparent or not
+  transparent: boolean;
+  /**
+   * uniforms
+   */
   uTime?: { value: number };
   uResolution?: { value: Vector2 };
   uMousePosition?: { value: Vector2 };
@@ -45,6 +53,9 @@ interface IgetLavaLampOptions {
 interface IgetLavaLampReturnType {
   mesh: Mesh;
   scene: Scene;
+  material: ShaderMaterial;
+  renderer: WebGLRenderer;
+  cleanup: () => void;
 }
 
 export function getLavalamp(options?: IgetLavaLampOptions): IgetLavaLampReturnType;
