@@ -35,6 +35,7 @@ export function getLavalamp({
   /**
    * options
    */
+  canvasId = 'webgl',
   isDev = false,
   wireframe = false,
   addMeshOnScene = false,
@@ -125,6 +126,7 @@ export function getLavalamp({
   const clock = new Clock();
   const { uniforms } = mesh.material;
   const { renderer, scene, controls, camera, canvas, animationId } = minimalSetup({
+    canvasId,
     addMeshOnScene,
     mesh,
     enableOrbitControl: isDev,

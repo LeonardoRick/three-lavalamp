@@ -2,6 +2,7 @@ import { Color, Scene, Vector2 } from 'three';
 
 /**
  * @typedef IgetLavaLampOptions
+ * @property {string} canvasId
  * @property {boolean} isDev
  * @property {boolean} wireframe
  * @property {boolean} addMeshOnScene
