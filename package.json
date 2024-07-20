@@ -1,6 +1,6 @@
 {
   "name": "@leonardorick/three-lavalamp-background",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
@@ -17,14 +17,14 @@
     "deploy": "npm run build && npm version patch --force && npm publish --access=public"
   },
   "dependencies": {
-    "@leonardorick/three": "^1.0.57",
+    "@leonardorick/three": "^1.0.58",
     "@leonardorick/utils": "^0.0.27",
     "nice-color-palettes": "^3.0.0",
     "three": "^0.166.1",
-    "tweakpane": "^4.0.3"
+    "tweakpane": "^4.0.4"
   },
   "devDependencies": {
-    "@tweakpane/core": "^2.0.3",
+    "@tweakpane/core": "^2.0.4",
     "@types/three": "^0.166.0",
     "three-subdivide": "^1.1.5",
     "vite": "^5.0.8",
