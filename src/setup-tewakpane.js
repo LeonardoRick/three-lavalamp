@@ -155,7 +155,7 @@ function setupUniformTweaks(mesh, pane) {
   mouse.addBinding(uniforms.uMouseBrightness, 'value', {
     min: -3,
     max: 3,
-    step: 0.1,
+    step: 0.01,
     label: 'mouse effect brightness',
   });
 

@@ -69,7 +69,7 @@ void main() {
             float fi = float(i);
             float colorSeed = 1. + fi * uColorSeed;
             float colorFlow = 5. + fi * -uColorDirectionX;
-            float colorSpeed = 10. + fi * uColorSpeed;
+            float colorSpeed = fi * uColorSpeed;
 
             // play with this value to show more randomness on the colors (more messy)
             vec2 colorFreq = vec2(uColorFreq, uColorFreq + uColorFreqY);
