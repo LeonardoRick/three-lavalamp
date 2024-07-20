@@ -8,6 +8,7 @@ varying vec3 vColor;
 
 uniform float uTime;
 uniform vec2 uResolution;
+uniform float uPixelRatio;
 uniform vec2 uMousePosition;
 
 uniform float uMouseBrightness;
@@ -38,6 +39,15 @@ void main() {
 
     // Convert gl_FragCoord from pixels to the same [0, 1] range for accurate distance calculation
     vec2 fragCoordNormalized = gl_FragCoord.xy / uResolution;
+
+	// This was the only solution I found to make it work on a device with pixelRatio of 2. Basicaly
+	// What we do here is to subtract - 0.5 from the normalized fragCoord if the pixel ratio is 2.
+	// for a pixelRatio of 1 it does nothing because 1-1 equals 0. I don't know how it will behave on
+	// a monitor with pixelRatio of 3 or higher but since I'm usually clamping it to 2 like I saw was
+	// better for performances, this might work well
+	float pixelRatioFix = (uPixelRatio - 1.) * 0.5;
+	fragCoordNormalized -= vec2(pixelRatioFix, pixelRatioFix);
+	// fragCoordNormalized -= vec2(0.5, 0.5);
 	// Calculate the distance in the [0, 1] range
     float dist = distance(fragCoordNormalized, uMousePosition);
  	// Modify this line to adjust the influence of the mouse position over the noise.

@@ -51,6 +51,7 @@ export function getLavalamp({
    */
   uTime = { value: 0 },
   uResolution = { value: new Vector2(0, 0) },
+  uPixelRatio = { value: window.devicePixelRatio },
   uMousePosition = { value: new Vector2(0, 0) },
 
   uPallete = { value: pallete },
@@ -68,7 +69,7 @@ export function getLavalamp({
   uNoiseSpeed = { value: 10 },
   uNoiseFloor = { value: 0 }, // cut the waves at the base
 
-  uGrain = { value: 20 },
+  uGrain = { value: 10 },
   uGrainSpeed = { value: 0.021 },
   uMouseBrightness = { value: 0.3 },
   uMousePerlin = { value: 0.9 },
@@ -94,6 +95,7 @@ export function getLavalamp({
     uniforms: {
       uTime,
       uResolution,
+      uPixelRatio,
       uMousePosition,
       uPallete,
       uIntensity,
@@ -145,6 +147,7 @@ export function getLavalamp({
     },
     resizeCallback: ({ renderer }) => {
       uniforms.uResolution.value = getRendererSize(renderer);
+      uniforms.uPixelRatio.value = getPixelRatio();
     },
   });
   /**
@@ -158,6 +161,9 @@ export function getLavalamp({
   };
   canvas.addEventListener('mousemove', mouseMoveHandler);
 
+  function getPixelRatio() {
+    return renderer.getPixelRatio();
+  }
   /**
    * get renderer size (x, y)
    * @param {WebGLRenderer} renderer
@@ -196,8 +202,8 @@ function addNewPalletes(palletes) {
 
 function getNormalizedMousePosition(event, canvas) {
   return {
-    x: normalize(event.clientX, canvas.clientWidth) - 0.165,
-    y: normalize(event.clientY, canvas.clientHeight, { inverted: true }) - 0.15,
+    x: normalize(event.clientX, canvas.clientWidth),
+    y: normalize(event.clientY, canvas.clientHeight, { inverted: true }),
   };
 }
 
