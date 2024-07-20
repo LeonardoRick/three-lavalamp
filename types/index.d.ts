@@ -1,4 +1,5 @@
 import type { Camera, Color, Mesh, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
+import type { Pane } from 'tweakpane';
 
 interface IgetLavaLampOptions {
   canvasId?: string;
@@ -56,6 +57,7 @@ interface IgetLavaLampReturnType {
   material: ShaderMaterial;
   renderer: WebGLRenderer;
   camera: Camera;
+  pane: Pane | undefined;
   cleanup: () => void;
 }
 

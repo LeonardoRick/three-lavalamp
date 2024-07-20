@@ -34,6 +34,7 @@ let pane;
  * @param {OrbitControls | undefined} controls
  * @param {string[]} colors
  * @param {number} palleteIndex
+ * @returns {Pane}
  */
 export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
   if (document.querySelector('.tw-pane-lavalamp')) {
@@ -56,6 +57,7 @@ export function setupTweakPane(mesh, camera, controls, colors, palleteIndex) {
 
   setupReset(mesh, pane, colors, palleteIndex, colorsObj, selectedPalleteObj);
   setupUndoListener(pane);
+  return pane;
 }
 
 /**

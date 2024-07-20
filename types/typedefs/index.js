@@ -1,4 +1,5 @@
 import { Camera, Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
+import { Pane } from 'tweakpane';
 
 /**
  * @typedef IgetLavaLampOptions
@@ -57,5 +58,6 @@ import { Camera, Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'th
  * @property {ShaderMaterial} material
  * @property {WebGLRenderer} renderer
  * @property {Camera} camera
+ * @property {Pane | undefined} pane
  * @property {() => void} cleanup
  */

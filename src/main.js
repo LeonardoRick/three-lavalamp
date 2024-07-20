@@ -16,6 +16,7 @@ import { setupCamera } from './setup-camera';
 
 import * as I from '../types/typedefs';
 import { normalize } from '@leonardorick/utils';
+import { Pane } from 'tweakpane';
 
 export const favoriteIndexes = [10, 57, 83, 95];
 /**
@@ -175,9 +176,13 @@ export function getLavalamp({
     return renderer.getSize(new Vector2());
   }
 
+  /**
+   * @type {Pane}
+   */
+  let pane;
   if (isDev) {
     setupCamera(camera, controls, isDev);
-    setupTweakPane(mesh, camera, controls, colors, palleteIndex);
+    pane = setupTweakPane(mesh, camera, controls, colors, palleteIndex);
   }
 
   function cleanup() {
@@ -195,6 +200,7 @@ export function getLavalamp({
     material,
     renderer,
     camera,
+    pane,
     cleanup,
   };
 }
