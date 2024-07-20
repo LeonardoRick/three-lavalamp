@@ -1,4 +1,4 @@
-import type { Color, Mesh, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
+import type { Camera, Color, Mesh, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
 
 interface IgetLavaLampOptions {
   canvasId?: string;
@@ -55,6 +55,7 @@ interface IgetLavaLampReturnType {
   scene: Scene;
   material: ShaderMaterial;
   renderer: WebGLRenderer;
+  camera: Camera;
   cleanup: () => void;
 }
 

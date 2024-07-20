@@ -234,12 +234,8 @@ function addStyles() {
 
     /* change panel styles of tweakpane */
     .tw-pane-lavalamp.tp-rotv {
-      font-size: 14px;
-      padding: 4px;
-    }
-
-    .tw-pane-lavalamp .tp-lblv {
-      padding: 2px 0;
+      font-size: 12px;
+      padding: 2px;
     }
 
     .tw-pane-lavalamp .tp-txtv-num {

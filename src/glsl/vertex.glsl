@@ -28,6 +28,8 @@ uniform float uColorFreqY;
 uniform float uColorNoiseFloor;
 uniform float uColorNoiseCeil;
 
+uniform float uBrightness;
+
 varying vec2 vUv;
 varying vec3 vColor;
 
@@ -93,5 +95,6 @@ void main() {
         }
     }
 
+    vColor *= uBrightness;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

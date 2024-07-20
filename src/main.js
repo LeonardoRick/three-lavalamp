@@ -83,6 +83,7 @@ export function getLavalamp({
   uColorNoiseFloor = { value: 0 },
   uColorNoiseCeil = { value: 0.6 },
 
+  uBrightness = { value: 1 },
   uPerlinNoise = { value: 0 },
 } = {}) {
   /**
@@ -122,6 +123,7 @@ export function getLavalamp({
       uColorFreqY,
       uColorNoiseFloor,
       uColorNoiseCeil,
+      uBrightness,
       uPerlinNoise,
     },
     side: DoubleSide,
@@ -192,6 +194,7 @@ export function getLavalamp({
     mesh,
     material,
     renderer,
+    camera,
     cleanup,
   };
 }

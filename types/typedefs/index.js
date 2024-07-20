@@ -1,4 +1,4 @@
-import { Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
+import { Camera, Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
 
 /**
  * @typedef IgetLavaLampOptions
@@ -56,5 +56,6 @@ import { Color, Scene, ShaderMaterial, Vector2, WebGLRenderer } from 'three';
  * @property {Mesh} mesh
  * @property {ShaderMaterial} material
  * @property {WebGLRenderer} renderer
+ * @property {Camera} camera
  * @property {() => void} cleanup
  */

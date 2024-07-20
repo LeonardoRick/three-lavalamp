@@ -231,6 +231,13 @@ function setupUniformTweaks(mesh, pane) {
     step: 0.1,
     label: 'perlin',
   });
+
+  collorEffects.addBinding(uniforms.uBrightness, 'value', {
+    min: 0,
+    max: 50,
+    step: 0.1,
+    label: 'overall brightness',
+  });
 }
 /**
  * setup pallete selector
