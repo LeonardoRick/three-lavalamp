@@ -1,6 +1,6 @@
 {
   "name": "@leonardorick/three-lavalamp-background",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@tweakpane/core": "^2.0.3",
     "@types/three": "^0.166.0",
+    "three-subdivide": "^1.1.5",
     "vite": "^5.0.8",
     "vite-plugin-glsl": "^1.2.1"
   }
