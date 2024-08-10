@@ -1,0 +1,2 @@
+// change mouse logic to the vertexShader so I can change the color noise based on that
+// find a way to add metalness on the shader
